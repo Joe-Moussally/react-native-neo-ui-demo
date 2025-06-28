@@ -9,6 +9,7 @@ import {
 } from "@joe111/neo-ui";
 import React, { useState } from "react";
 import { Image, ScrollView, StyleSheet, Switch, View } from "react-native";
+import { Codeblock } from "../../../components";
 
 // Define examples for demonstration
 const VARIANTS: SkeletonVariant[] = [
@@ -365,23 +366,214 @@ export default function SkeletonScreen() {
           loaded to reduce load-time frustration.
         </Typography>
 
-        <Section title="Basic Usage">{renderBasicUsage()}</Section>
+        <Codeblock
+          title="Basic Usage"
+          code={`import { Skeleton } from '@joe111/neo-ui';
 
-        <Section title="Variants">{renderVariantExamples()}</Section>
+// Basic skeleton
+<Skeleton variant="text" width="80%" />
+<Skeleton variant="circular" width={40} height={40} />
+<Skeleton variant="rectangular" width={200} height={100} />
 
-        <Section title="Animations">{renderAnimationExamples()}</Section>
+// Replace content when loading
+{loading ? (
+  <Skeleton variant="text" width="60%" />
+) : (
+  <Typography>Loaded content</Typography>
+)}`}
+        />
+
+        <Section title="Basic Usage">
+          <Codeblock
+            title="Loading State Pattern"
+            code={`const [loading, setLoading] = useState(true);
+
+return (
+  <View style={styles.card}>
+    {loading ? (
+      // Show skeleton while loading
+      <>
+        <Skeleton variant="circular" width={40} height={40} />
+        <View style={styles.content}>
+          <Skeleton variant="text" width="80%" />
+          <Skeleton variant="text" width="60%" />
+        </View>
+      </>
+    ) : (
+      // Show actual content when loaded
+      <>
+        <Avatar src="https://example.com/avatar.jpg" size="md" />
+        <View style={styles.content}>
+          <Typography variant="h3">John Doe</Typography>
+          <Typography variant="body">Software Engineer</Typography>
+        </View>
+      </>
+    )}
+  </View>
+);`}
+          />
+          {renderBasicUsage()}
+        </Section>
+
+        <Section title="Variants">
+          <Codeblock
+            title="Skeleton Variants"
+            code={`// Available variants: text, circular, rectangular, rounded
+
+// Text skeleton - for text content
+<Skeleton variant="text" width={200} />
+
+// Circular skeleton - for avatars, profile pictures
+<Skeleton variant="circular" width={60} height={60} />
+
+// Rectangular skeleton - for images, cards
+<Skeleton variant="rectangular" width={150} height={60} />
+
+// Rounded skeleton - for buttons, rounded elements
+<Skeleton variant="rounded" width={150} height={60} />`}
+          />
+          {renderVariantExamples()}
+        </Section>
+
+        <Section title="Animations">
+          <Codeblock
+            title="Animation Types"
+            code={`// Available animations: pulse, wave, false (no animation)
+
+// Pulse animation (default)
+<Skeleton variant="rectangular" width={150} height={60} animation="pulse" />
+
+// Wave animation
+<Skeleton variant="rectangular" width={150} height={60} animation="wave" />
+
+// No animation
+<Skeleton variant="rectangular" width={150} height={60} animation={false} />`}
+          />
+          {renderAnimationExamples()}
+        </Section>
 
         <Section title="Inferring Dimensions">
+          <Codeblock
+            title="Auto-sizing from Children"
+            code={`// Skeleton automatically infers dimensions from children
+// Text variants inherit font size from Typography component
+
+<Typography variant="h1">
+  {loading ? <Skeleton /> : "Heading 1"}
+</Typography>
+
+<Typography variant="body">
+  {loading ? <Skeleton /> : "Body text"}
+</Typography>
+
+// Infer size from child component
+{loading ? (
+  <Skeleton variant="circular">
+    <Avatar size="lg" />
+  </Skeleton>
+) : (
+  <Avatar src="https://example.com/avatar.jpg" size="lg" />
+)}`}
+          />
           {renderInferredDimensions()}
         </Section>
 
         <Section title="Color Customization">
+          <Codeblock
+            title="Custom Colors"
+            code={`// Custom background color using sx prop
+<Skeleton
+  variant="rectangular"
+  width={150}
+  height={60}
+  sx={{ bgcolor: theme.colors.surface }}
+/>
+
+// On dark backgrounds
+<View style={{ backgroundColor: '#333', padding: 16 }}>
+  <Skeleton
+    variant="rectangular"
+    width={150}
+    height={60}
+    sx={{ bgcolor: '#555' }}
+  />
+</View>`}
+          />
           {renderColorCustomization()}
         </Section>
 
-        <Section title="Media Example">{renderMediaExample()}</Section>
+        <Section title="Media Example">
+          <Codeblock
+            title="Media Loading (YouTube-style)"
+            code={`// Media list with loading skeletons
+const mediaItems = loading ? Array.from(new Array(3)) : actualData;
 
-        <Section title="Combined Examples">{renderCombinedExamples()}</Section>
+return (
+  <ScrollView horizontal>
+    {mediaItems.map((item, index) => (
+      <View key={index} style={styles.mediaItem}>
+        {item ? (
+          <Image source={{ uri: item.image }} style={styles.mediaImage} />
+        ) : (
+          <Skeleton variant="rectangular" width={210} height={118} />
+        )}
+        
+        <View style={styles.mediaContent}>
+          {item ? (
+            <>
+              <Typography variant="body" numberOfLines={2}>
+                {item.title}
+              </Typography>
+              <Typography variant="bodySmall">
+                {item.channel}
+              </Typography>
+            </>
+          ) : (
+            <>
+              <Skeleton variant="text" width="100%" />
+              <Skeleton variant="text" width="80%" />
+              <Skeleton variant="text" width="60%" />
+            </>
+          )}
+        </View>
+      </View>
+    ))}
+  </ScrollView>
+);`}
+          />
+          {renderMediaExample()}
+        </Section>
+
+        <Section title="Combined Examples">
+          <Codeblock
+            title="Social Media Card"
+            code={`// Complete card skeleton with header, image, and content
+{loading ? (
+  <View style={styles.card}>
+    {/* Header with avatar and user info */}
+    <View style={styles.header}>
+      <Skeleton variant="circular" width={40} height={40} animation="wave" />
+      <View style={styles.headerText}>
+        <Skeleton variant="text" width="80%" height={10} animation="wave" />
+        <Skeleton variant="text" width="40%" height={10} animation="wave" />
+      </View>
+    </View>
+    
+    {/* Main image */}
+    <Skeleton variant="rectangular" width="100%" height={140} animation="wave" />
+    
+    {/* Content text */}
+    <View style={styles.content}>
+      <Skeleton variant="text" animation="wave" />
+      <Skeleton variant="text" width="80%" animation="wave" />
+    </View>
+  </View>
+) : (
+  <ActualCardContent />
+)}`}
+          />
+          {renderCombinedExamples()}
+        </Section>
       </ScrollView>
     </Screen>
   );

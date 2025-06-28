@@ -10,6 +10,7 @@ import {
 } from "@joe111/neo-ui";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { Codeblock } from "../../../components";
 
 function ToastScreenContent() {
   const { theme } = useTheme();
@@ -64,8 +65,51 @@ function ToastScreenContent() {
   return (
     <Screen title="Toast" options={{ headerLargeTitle: true }}>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <Typography
+          variant="body"
+          color={theme.colors.textSecondary}
+          style={styles.description}
+        >
+          Display brief, temporary notifications to users. Toasts can be global
+          (appear anywhere in your app) or local (scoped to specific
+          components).
+        </Typography>
+
+        <Codeblock
+          title="Basic Usage"
+          code={`import { toast } from '@joe111/neo-ui';
+
+// Basic toast
+toast.show("Hello World!");
+
+// Variant toasts
+toast.success("Operation completed!");
+toast.error("Something went wrong");  
+toast.warning("Please check your input");
+toast.info("New features available");`}
+        />
+
         {/* Global Toast Examples - These work from anywhere in your app */}
         <Section title="Global Toast Examples">
+          <Codeblock
+            title="Global Toast Methods"
+            code={`// Global toast methods work from anywhere in your app
+// when RootToastProvider is wrapped around your app root
+
+import { toast } from '@joe111/neo-ui';
+
+// Basic variants
+toast.show("Default toast");
+toast.success("Success!");
+toast.error("Error occurred!");
+toast.warning("Warning message");
+toast.info("Info notification");
+
+// With position
+toast.success("Top success!", { position: "top" });
+toast.error("Bottom error!", { position: "bottom" });`}
+          />
+
           <Demo title="Basic Global Toast Variants">
             <Typography
               style={{
@@ -157,6 +201,17 @@ function ToastScreenContent() {
             </View>
           </Demo>
 
+          <Codeblock
+            title="Persistent Toasts"
+            code={`// Persistent toast that stays until dismissed
+toast.warning("This toast stays until dismissed", {
+  duration: "infinite"
+});
+
+// Clear all global toasts
+toast.hideAll();`}
+          />
+
           <Demo title="Persistent Global Toasts">
             <View style={styles.column}>
               <Button
@@ -178,6 +233,26 @@ function ToastScreenContent() {
 
         {/* Interactive Global Toasts */}
         <Section title="Interactive Global Toasts">
+          <Codeblock
+            title="Toasts with Actions"
+            code={`// Toast with action button
+toast.success("Changes saved automatically", {
+  action: {
+    label: "View",
+    onPress: () => toast.info("Action button pressed!")
+  }
+});
+
+// Network error with retry action
+toast.error("Network connection lost. Retrying...", {
+  duration: "infinite",
+  action: {
+    label: "Retry", 
+    onPress: () => toast.success("Retrying connection...")
+  }
+});`}
+          />
+
           <Demo title="Global Toasts with Actions">
             <View style={styles.column}>
               <Button
@@ -209,6 +284,33 @@ function ToastScreenContent() {
               </Button>
             </View>
           </Demo>
+
+          <Codeblock
+            title="Advanced Options"
+            code={`// Long content with custom duration
+toast.info(
+  "This is a very long toast message that should wrap to multiple lines and still look good in the UI.",
+  { duration: 6000 }
+);
+
+// Custom icon
+toast.info("Achievement Unlocked! You've earned a gold star!", {
+  icon: (
+    <Ionicons 
+      name="star" 
+      size={20} 
+      color={theme.colors.warning}
+      style={{ marginRight: 12 }}
+    />
+  )
+});
+
+// No close button
+toast.info("This toast has no close button", {
+  showCloseButton: false,
+  duration: 3000
+});`}
+          />
 
           <Demo title="Long Content">
             <Button
@@ -260,6 +362,37 @@ function ToastScreenContent() {
 
         {/* Real-world Examples */}
         <Section title="Real-world Examples">
+          <Codeblock
+            title="Common Use Cases"
+            code={`// Save success with action
+toast.success("Profile updated successfully", {
+  action: { label: "View", onPress: () => {} }
+});
+
+// Upload complete
+toast.success("File uploaded successfully", {
+  position: "bottom"
+});
+
+// Confirmation dialog
+toast.warning("Are you sure you want to delete this item?", {
+  action: {
+    label: "Delete",
+    onPress: () => toast.success("Item deleted")
+  },
+  duration: "infinite"
+});
+
+// Multiple sequential toasts
+for (let i = 1; i <= 3; i++) {
+  setTimeout(() => {
+    const variants = ["info", "warning", "success"] as const;
+    const variant = variants[i - 1];
+    toast[variant](\`Toast \${i} of 3\`);
+  }, i * 500);
+}`}
+          />
+
           <Demo title="Common Use Cases">
             <View style={styles.column}>
               <Button
@@ -322,6 +455,32 @@ function ToastScreenContent() {
 
         {/* Local Scoped Toast Examples */}
         <Section title="Local Scoped Toast Examples">
+          <Codeblock
+            title="useToast Hook"
+            code={`// Local component toasts using useToast hook
+// Only works within components wrapped by ToastProvider
+
+import { useToast } from '@joe111/neo-ui';
+
+function MyComponent() {
+  const { showToast, hideAllToasts } = useToast();
+  
+  const handleClick = () => {
+    showToast({
+      message: "Local scoped toast",
+      variant: "success",
+      action: { label: "OK", onPress: () => {} }
+    });
+  };
+  
+  return (
+    <Button onPress={handleClick}>
+      Show Local Toast
+    </Button>
+  );
+}`}
+          />
+
           <Demo title="useToast() hook - Local Component Toasts">
             <Typography
               style={{
@@ -358,90 +517,12 @@ function ToastScreenContent() {
           </Demo>
         </Section>
 
-        {/* Code Examples */}
-        <Section title="Usage Examples">
-          <Demo title="Basic Usage">
-            <View
-              style={[
-                styles.codeBlock,
-                {
-                  backgroundColor: theme.colors.background,
-                  borderColor: theme.colors.border,
-                },
-              ]}
-            >
-              <Typography
-                style={{
-                  fontFamily: "monospace",
-                  fontSize: 12,
-                  color: theme.colors.text,
-                }}
-              >
-                {`// Global toast methods (work anywhere)
-import { toast } from "@joe111/neo-ui/Toast";
-
-toast.success("Operation completed!");
-toast.error("Something went wrong");
-toast.warning("Please check your input");
-toast.info("New features available");
-
-// With options
-toast.success("Upload complete!", {
-  title: "Success",
-  position: "bottom",
-  duration: 5000
-});`}
-              </Typography>
-            </View>
-          </Demo>
-
-          <Demo title="Local Component Usage">
-            <View
-              style={[
-                styles.codeBlock,
-                {
-                  backgroundColor: theme.colors.background,
-                  borderColor: theme.colors.border,
-                },
-              ]}
-            >
-              <Typography
-                style={{
-                  fontFamily: "monospace",
-                  fontSize: 12,
-                  color: theme.colors.text,
-                }}
-              >
-                {`// Using the hook within a component
-const { showToast } = useToast();
-
-showToast({
-  message: "Hello World!",
-  variant: "success"
-});`}
-              </Typography>
-            </View>
-          </Demo>
-
-          <Demo title="Root Provider Setup">
-            <View
-              style={[
-                styles.codeBlock,
-                {
-                  backgroundColor: theme.colors.background,
-                  borderColor: theme.colors.border,
-                },
-              ]}
-            >
-              <Typography
-                style={{
-                  fontFamily: "monospace",
-                  fontSize: 12,
-                  color: theme.colors.text,
-                }}
-              >
-                {`// In your app's root component (_layout.tsx)
-import { RootToastProvider } from "@joe111/neo-ui/Toast";
+        {/* Setup Examples */}
+        <Section title="Setup & Configuration">
+          <Codeblock
+            title="Root Provider Setup"
+            code={`// In your app's root component (_layout.tsx)
+import { RootToastProvider } from '@joe111/neo-ui';
 
 export default function RootLayout() {
   return (
@@ -450,9 +531,36 @@ export default function RootLayout() {
     </RootToastProvider>
   );
 }`}
-              </Typography>
-            </View>
-          </Demo>
+          />
+
+          <Codeblock
+            title="Local Provider Setup"
+            code={`// For local scoped toasts within specific screens
+import { ToastProvider } from '@joe111/neo-ui';
+
+export default function MyScreen() {
+  return (
+    <ToastProvider maxToasts={5}>
+      <MyScreenContent />
+    </ToastProvider>
+  );
+}`}
+          />
+
+          <Codeblock
+            title="Import Options"
+            code={`// Global toast methods
+import { toast } from '@joe111/neo-ui';
+
+// Hook for local toasts
+import { useToast } from '@joe111/neo-ui';
+
+// Providers
+import { 
+  RootToastProvider, 
+  ToastProvider 
+} from '@joe111/neo-ui';`}
+          />
         </Section>
 
         <View style={styles.bottomPadding} />
@@ -473,6 +581,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+  description: {
+    marginBottom: 24,
   },
   section: {
     marginBottom: 32,
