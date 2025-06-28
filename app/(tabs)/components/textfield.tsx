@@ -10,6 +10,7 @@ import {
 } from "@joe111/neo-ui";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { Codeblock } from "../../../components";
 
 // Define examples for demonstration
 const VARIANTS: TextFieldVariant[] = ["filled", "outline", "underline"];
@@ -69,41 +70,152 @@ export default function TextFieldScreen() {
   );
 
   const renderVariantExamples = () => {
-    return VARIANTS.map((variant) => (
-      <ExampleContainer key={variant} label={`variant="${variant}"`}>
-        <TextField
-          variant={variant}
-          placeholder={`${variant} variant`}
-          label={`${variant.charAt(0).toUpperCase() + variant.slice(1)} Label`}
-          helperText="This is helper text"
+    return (
+      <>
+        {VARIANTS.map((variant) => (
+          <ExampleContainer key={variant} label={`variant="${variant}"`}>
+            <TextField
+              variant={variant}
+              placeholder={`${variant} variant`}
+              label={`${
+                variant.charAt(0).toUpperCase() + variant.slice(1)
+              } Label`}
+              helperText="This is helper text"
+            />
+          </ExampleContainer>
+        ))}
+
+        <Codeblock
+          title="TextField Variant Examples"
+          code={`import { TextField } from '@joe111/neo-ui';
+
+// Filled variant (default)
+<TextField
+  variant="filled"
+  placeholder="Filled variant"
+  label="Filled Label"
+  helperText="This is helper text"
+/>
+
+// Outline variant
+<TextField
+  variant="outline"
+  placeholder="Outline variant"
+  label="Outline Label"
+  helperText="This is helper text"
+/>
+
+// Underline variant
+<TextField
+  variant="underline"
+  placeholder="Underline variant"
+  label="Underline Label"
+  helperText="This is helper text"
+/>`}
         />
-      </ExampleContainer>
-    ));
+      </>
+    );
   };
 
   const renderSizeExamples = () => {
-    return SIZES.map((size) => (
-      <ExampleContainer key={size} label={`size="${size}"`}>
-        <TextField
-          size={size}
-          placeholder={`Size ${size.toUpperCase()}`}
-          label={`${size.toUpperCase()} Size`}
+    return (
+      <>
+        {SIZES.map((size) => (
+          <ExampleContainer key={size} label={`size="${size}"`}>
+            <TextField
+              size={size}
+              placeholder={`Size ${size.toUpperCase()}`}
+              label={`${size.toUpperCase()} Size`}
+            />
+          </ExampleContainer>
+        ))}
+
+        <Codeblock
+          title="TextField Size Examples"
+          code={`// Different sizes
+<TextField
+  size="sm"
+  placeholder="Small size"
+  label="SM Size"
+/>
+
+<TextField
+  size="md"
+  placeholder="Medium size"
+  label="MD Size"
+/>
+
+<TextField
+  size="lg"
+  placeholder="Large size"
+  label="LG Size"
+/>`}
         />
-      </ExampleContainer>
-    ));
+      </>
+    );
   };
 
   const renderColorExamples = () => {
-    return COLORS.map((color) => (
-      <ExampleContainer key={color} label={`color="${color}"`}>
-        <TextField
-          color={color}
-          placeholder={`${color} color`}
-          label={`${color.charAt(0).toUpperCase() + color.slice(1)} Color`}
-          variant="outline"
+    return (
+      <>
+        {COLORS.map((color) => (
+          <ExampleContainer key={color} label={`color="${color}"`}>
+            <TextField
+              color={color}
+              placeholder={`${color} color`}
+              label={`${color.charAt(0).toUpperCase() + color.slice(1)} Color`}
+              variant="outline"
+            />
+          </ExampleContainer>
+        ))}
+
+        <Codeblock
+          title="TextField Color Examples"
+          code={`// Different theme colors
+<TextField
+  color="primary"
+  placeholder="Primary color"
+  label="Primary Color"
+  variant="outline"
+/>
+
+<TextField
+  color="secondary"
+  placeholder="Secondary color"
+  label="Secondary Color"
+  variant="outline"
+/>
+
+<TextField
+  color="accent"
+  placeholder="Accent color"
+  label="Accent Color"
+  variant="outline"
+/>
+
+<TextField
+  color="success"
+  placeholder="Success color"
+  label="Success Color"
+  variant="outline"
+/>
+
+<TextField
+  color="warning"
+  placeholder="Warning color"
+  label="Warning Color"
+  variant="outline"
+/>
+
+<TextField
+  color="error"
+  placeholder="Error color"
+  label="Error Color"
+  variant="outline"
+/>`}
         />
-      </ExampleContainer>
-    ));
+      </>
+    );
   };
 
   const renderStateExamples = () => {
@@ -127,15 +239,54 @@ export default function TextFieldScreen() {
       },
     ];
 
-    return states.map((state, index) => (
-      <ExampleContainer key={index} label={state.prop}>
-        <TextField
-          {...state}
-          label="Example Label"
-          helperText={!state.error ? "Helper text" : undefined}
+    return (
+      <>
+        {states.map((state, index) => (
+          <ExampleContainer key={index} label={state.prop}>
+            <TextField
+              {...state}
+              label="Example Label"
+              helperText={!state.error ? "Helper text" : undefined}
+            />
+          </ExampleContainer>
+        ))}
+
+        <Codeblock
+          title="TextField State Examples"
+          code={`// Disabled state
+<TextField
+  disabled={true}
+  placeholder="Disabled field"
+  label="Example Label"
+  helperText="Helper text"
+/>
+
+// Error state
+<TextField
+  error={true}
+  placeholder="Error field"
+  label="Example Label"
+  errorText="This field has an error"
+/>
+
+// Loading state
+<TextField
+  loading={true}
+  placeholder="Loading field"
+  label="Example Label"
+  helperText="Helper text"
+/>
+
+// Required field
+<TextField
+  required={true}
+  placeholder="Required field"
+  label="Example Label"
+  helperText="Helper text"
+/>`}
         />
-      </ExampleContainer>
-    ));
+      </>
+    );
   };
 
   const renderIconExamples = () => {
@@ -177,11 +328,51 @@ export default function TextFieldScreen() {
       },
     ];
 
-    return examples.map((example, index) => (
-      <ExampleContainer key={index} label={example.label}>
-        <TextField {...example.props} />
-      </ExampleContainer>
-    ));
+    return (
+      <>
+        {examples.map((example, index) => (
+          <ExampleContainer key={index} label={example.label}>
+            <TextField {...example.props} />
+          </ExampleContainer>
+        ))}
+
+        <Codeblock
+          title="TextField Icon Examples"
+          code={`import { Ionicons } from '@expo/vector-icons';
+
+// Start icon
+<TextField
+  startIcon={<Ionicons name="person" />}
+  placeholder="Username"
+  label="Username"
+/>
+
+// End icon
+<TextField
+  endIcon={<Ionicons name="eye" />}
+  placeholder="Password"
+  label="Password"
+  secureTextEntry={true}
+/>
+
+// Both icons
+<TextField
+  startIcon={<Ionicons name="search" />}
+  endIcon={<Ionicons name="close" />}
+  placeholder="Search..."
+  label="Search"
+/>
+
+// Icon with loading state
+<TextField
+  startIcon={<Ionicons name="mail" />}
+  loading={true}
+  placeholder="Email"
+  label="Email"
+/>`}
+        />
+      </>
+    );
   };
 
   const renderInputTypeExamples = () => {
@@ -222,11 +413,48 @@ export default function TextFieldScreen() {
       },
     ];
 
-    return examples.map((example, index) => (
-      <ExampleContainer key={index} label={example.label}>
-        <TextField {...example.props} />
-      </ExampleContainer>
-    ));
+    return (
+      <>
+        {examples.map((example, index) => (
+          <ExampleContainer key={index} label={example.label}>
+            <TextField {...example.props} />
+          </ExampleContainer>
+        ))}
+
+        <Codeblock
+          title="TextField Input Type Examples"
+          code={`// Email keyboard
+<TextField
+  keyboardType="email-address"
+  placeholder="Enter your email"
+  label="Email Address"
+  autoCapitalize="none"
+/>
+
+// Numeric keyboard
+<TextField
+  keyboardType="numeric"
+  placeholder="Enter phone number"
+  label="Phone Number"
+/>
+
+// Secure text entry (password)
+<TextField
+  secureTextEntry={true}
+  placeholder="Enter password"
+  label="Password"
+/>
+
+// Multiline text area
+<TextField
+  multiline={true}
+  numberOfLines={4}
+  placeholder="Enter your message..."
+  label="Message"
+/>`}
+        />
+      </>
+    );
   };
 
   const renderInteractiveExamples = () => {
@@ -320,21 +548,100 @@ export default function TextFieldScreen() {
             returnKeyType="search"
           />
         </ExampleContainer>
+
+        <Codeblock
+          title="Interactive Form Examples"
+          code={`import { useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+
+const [formData, setFormData] = useState({
+  name: "",
+  email: "",
+  password: "",
+  message: "",
+  search: "",
+  phone: "",
+});
+
+// Full form example
+<TextField
+  label="Full Name"
+  placeholder="Enter your full name"
+  value={formData.name}
+  onChangeText={(text) => setFormData(prev => ({ ...prev, name: text }))}
+  startIcon={<Ionicons name="person" />}
+  required
+  margin="sm"
+/>
+
+<TextField
+  label="Email"
+  placeholder="Enter your email"
+  value={formData.email}
+  onChangeText={(text) => setFormData(prev => ({ ...prev, email: text }))}
+  keyboardType="email-address"
+  autoCapitalize="none"
+  startIcon={<Ionicons name="mail" />}
+  helperText="We'll never share your email"
+  required
+  margin="sm"
+/>
+
+<TextField
+  label="Password"
+  placeholder="Enter your password"
+  value={formData.password}
+  onChangeText={(text) => setFormData(prev => ({ ...prev, password: text }))}
+  secureTextEntry
+  startIcon={<Ionicons name="lock-closed" />}
+  endIcon={<Ionicons name="eye" />}
+  helperText="Must be at least 8 characters"
+  required
+  margin="sm"
+/>
+
+// Search field with conditional end icon
+<TextField
+  placeholder="Search anything..."
+  value={formData.search}
+  onChangeText={(text) => setFormData(prev => ({ ...prev, search: text }))}
+  startIcon={<Ionicons name="search" />}
+  endIcon={formData.search ? <Ionicons name="close" /> : undefined}
+  variant="outline"
+  fullWidth
+  onSubmitEditing={() => console.log("Search:", formData.search)}
+  returnKeyType="search"
+/>`}
+        />
       </>
     );
   };
 
   const renderFullWidthExamples = () => {
     return (
-      <ExampleContainer label="fullWidth={true}">
-        <TextField
-          label="Full Width Field"
-          placeholder="This field takes full width"
-          fullWidth
-          variant="filled"
-          helperText="This field spans the full width of its container"
+      <>
+        <ExampleContainer label="fullWidth={true}">
+          <TextField
+            label="Full Width Field"
+            placeholder="This field takes full width"
+            fullWidth
+            variant="filled"
+            helperText="This field spans the full width of its container"
+          />
+        </ExampleContainer>
+
+        <Codeblock
+          title="Full Width Example"
+          code={`// Full width field
+<TextField
+  label="Full Width Field"
+  placeholder="This field takes full width"
+  fullWidth
+  variant="filled"
+  helperText="This field spans the full width of its container"
+/>`}
         />
-      </ExampleContainer>
+      </>
     );
   };
 
@@ -344,6 +651,20 @@ export default function TextFieldScreen() {
         style={styles.container}
         contentContainerStyle={styles.content}
       >
+        <Section title="Basic Usage">
+          <Codeblock
+            title="Import and Basic TextField"
+            code={`import { TextField } from '@joe111/neo-ui';
+
+// Basic text field
+<TextField
+  label="Name"
+  placeholder="Enter your name"
+  helperText="This is helper text"
+/>`}
+          />
+        </Section>
+
         <Section title="Variants">{renderVariantExamples()}</Section>
 
         <Section title="Sizes">{renderSizeExamples()}</Section>

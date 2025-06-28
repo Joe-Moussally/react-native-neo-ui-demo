@@ -96,26 +96,33 @@ export const Codeblock: React.FC<CodeblockProps> = ({
         style={styles.scrollView}
         horizontal
         showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={true}
+        nestedScrollEnabled={true}
       >
-        <View style={styles.codeContainer}>
-          {showLineNumbers && (
-            <View style={styles.lineNumbers}>
-              {lines.map((_, index) => (
-                <Text key={index} style={styles.lineNumber}>
-                  {index + 1}
+        <ScrollView
+          showsVerticalScrollIndicator={true}
+          showsHorizontalScrollIndicator={false}
+          nestedScrollEnabled={true}
+        >
+          <View style={styles.codeContainer}>
+            {showLineNumbers && (
+              <View style={styles.lineNumbers}>
+                {lines.map((_, index) => (
+                  <Text key={index} style={styles.lineNumber}>
+                    {index + 1}
+                  </Text>
+                ))}
+              </View>
+            )}
+            <View style={styles.codeContent}>
+              {lines.map((line, index) => (
+                <Text key={index} style={styles.codeLine}>
+                  {line || " "}
                 </Text>
               ))}
             </View>
-          )}
-          <View style={styles.codeContent}>
-            {lines.map((line, index) => (
-              <Text key={index} style={styles.codeLine}>
-                {line || " "}
-              </Text>
-            ))}
           </View>
-        </View>
+        </ScrollView>
       </ScrollView>
     </View>
   );
