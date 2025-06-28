@@ -10,6 +10,7 @@ import {
 } from "@joe111/neo-ui";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { Codeblock } from "../../../components";
 
 // Define examples for demonstration
 const VARIANTS: ChipVariant[] = ["solid", "soft", "outline", "ghost"];
@@ -283,21 +284,182 @@ export default function ChipScreen() {
         style={styles.container}
         contentContainerStyle={styles.content}
       >
-        <Section title="Variants">{renderVariantExamples()}</Section>
+        <Typography
+          variant="body"
+          color={theme.colors.textSecondary}
+          style={styles.description}
+        >
+          Chips are compact elements that represent an input, attribute, or
+          action.
+        </Typography>
 
-        <Section title="Sizes">{renderSizeExamples()}</Section>
+        <Codeblock
+          title="Basic Usage"
+          code={`import { Chip } from '@joe111/neo-ui';
 
-        <Section title="Colors">{renderColorExamples()}</Section>
+<Chip label="Basic Chip" />
+<Chip label="Primary" variant="solid" color="primary" />
+<Chip label="With Icon" startIcon={<Icon name="star" />} />`}
+        />
 
-        <Section title="With Icons">{renderIconExamples()}</Section>
+        <Section title="Variants">
+          <Codeblock
+            title="Variants"
+            code={`// Available variants: solid, soft, outline, ghost
+<Chip variant="solid" label="Solid Chip" />
+<Chip variant="soft" label="Soft Chip" />
+<Chip variant="outline" label="Outline Chip" />
+<Chip variant="ghost" label="Ghost Chip" />`}
+          />
+          {renderVariantExamples()}
+        </Section>
 
-        <Section title="States">{renderStateExamples()}</Section>
+        <Section title="Sizes">
+          <Codeblock
+            title="Sizes"
+            code={`// Available sizes: xs, sm, md, lg
+<Chip size="xs" label="Extra Small" />
+<Chip size="sm" label="Small" />
+<Chip size="md" label="Medium" />
+<Chip size="lg" label="Large" />`}
+          />
+          {renderSizeExamples()}
+        </Section>
+
+        <Section title="Colors">
+          <Codeblock
+            title="Colors"
+            code={`// Available colors: primary, secondary, accent, success, warning, error, info
+<Chip color="primary" variant="soft" label="Primary" />
+<Chip color="secondary" variant="soft" label="Secondary" />
+<Chip color="accent" variant="soft" label="Accent" />
+<Chip color="success" variant="soft" label="Success" />
+<Chip color="warning" variant="soft" label="Warning" />
+<Chip color="error" variant="soft" label="Error" />
+<Chip color="info" variant="soft" label="Info" />`}
+          />
+          {renderColorExamples()}
+        </Section>
+
+        <Section title="With Icons">
+          <Codeblock
+            title="Icons"
+            code={`import { Ionicons } from '@expo/vector-icons';
+
+// Start icon
+<Chip 
+  startIcon={<Ionicons name="star" />} 
+  label="Featured" 
+/>
+
+// End icon
+<Chip 
+  endIcon={<Ionicons name="chevron-down" />} 
+  label="Dropdown" 
+/>
+
+// Both icons
+<Chip 
+  startIcon={<Ionicons name="person" />}
+  endIcon={<Ionicons name="close" />}
+  label="User Tag" 
+/>
+
+// Deletable chip
+<Chip 
+  deletable 
+  label="Deletable"
+  onDelete={() => console.log('Delete pressed')} 
+/>`}
+          />
+          {renderIconExamples()}
+        </Section>
+
+        <Section title="States">
+          <Codeblock
+            title="States"
+            code={`// Disabled state
+<Chip disabled label="Disabled" />
+
+// Selected state
+<Chip selected label="Selected" />`}
+          />
+          {renderStateExamples()}
+        </Section>
 
         <Section title="Interactive Examples">
+          <Codeblock
+            title="Interactive Chips"
+            code={`const [selectedChips, setSelectedChips] = useState<string[]>([]);
+
+const toggleSelection = (chipId: string) => {
+  setSelectedChips(prev => 
+    prev.includes(chipId) 
+      ? prev.filter(id => id !== chipId)
+      : [...prev, chipId]
+  );
+};
+
+// Interactive selection
+<Chip
+  label="Option 1"
+  variant="outline"
+  selected={selectedChips.includes("Option 1")}
+  onPress={() => toggleSelection("Option 1")}
+  margin="xs"
+/>
+
+// Tag management
+const [tags, setTags] = useState(['React Native', 'TypeScript']);
+
+const removeTag = (tagToRemove: string) => {
+  setTags(prev => prev.filter(tag => tag !== tagToRemove));
+};
+
+<Chip
+  label={tag}
+  variant="soft"
+  color="secondary"
+  deletable
+  onDelete={() => removeTag(tag)}
+  margin="xs"
+/>`}
+          />
           {renderInteractiveExamples()}
         </Section>
 
-        <Section title="Combined Examples">{renderCombinedExamples()}</Section>
+        <Section title="Combined Examples">
+          <Codeblock
+            title="Advanced Usage"
+            code={`// User mention
+<Chip
+  startIcon={<Ionicons name="person" />}
+  label="@johndoe"
+  variant="soft"
+  color="primary"
+  size="sm"
+/>
+
+// Status badge
+<Chip
+  startIcon={<Ionicons name="checkmark-circle" />}
+  label="Completed"
+  variant="solid"
+  color="success"
+  size="xs"
+/>
+
+// Warning alert
+<Chip
+  startIcon={<Ionicons name="warning" />}
+  label="Attention Required"
+  variant="outline"
+  color="warning"
+  endIcon={<Ionicons name="chevron-forward" />}
+/>`}
+          />
+          {renderCombinedExamples()}
+        </Section>
       </ScrollView>
     </Screen>
   );
@@ -309,6 +471,9 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 16,
+  },
+  description: {
+    marginBottom: 24,
   },
   section: {
     marginBottom: 32,
