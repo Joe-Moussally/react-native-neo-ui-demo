@@ -325,6 +325,103 @@ export default function ButtonScreen() {
           />
         </Section>
 
+        <Section title="Variants with Colors">
+          <ExampleContainer label="Soft variants with different colors">
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+              <Button variant="soft" color="error">
+                Soft Error
+              </Button>
+              <Button variant="soft" color="success">
+                Soft Success
+              </Button>
+              <Button variant="soft" color="warning">
+                Soft Warning
+              </Button>
+              <Button variant="soft" color="info">
+                Soft Info
+              </Button>
+            </View>
+          </ExampleContainer>
+
+          <ExampleContainer label="Outline variants with different colors">
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+              <Button variant="outline" color="error">
+                Outline Error
+              </Button>
+              <Button variant="outline" color="success">
+                Outline Success
+              </Button>
+              <Button variant="outline" color="warning">
+                Outline Warning
+              </Button>
+              <Button variant="outline" color="info">
+                Outline Info
+              </Button>
+            </View>
+          </ExampleContainer>
+
+          <ExampleContainer label="Ghost variants with different colors">
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+              <Button variant="ghost" color="error">
+                Ghost Error
+              </Button>
+              <Button variant="ghost" color="success">
+                Ghost Success
+              </Button>
+              <Button variant="ghost" color="warning">
+                Ghost Warning
+              </Button>
+              <Button variant="ghost" color="accent">
+                Ghost Accent
+              </Button>
+            </View>
+          </ExampleContainer>
+
+          <ExampleContainer label="Text variants with different colors">
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+              <Button variant="text" color="error">
+                Text Error
+              </Button>
+              <Button variant="text" color="success">
+                Text Success
+              </Button>
+              <Button variant="text" color="warning">
+                Text Warning
+              </Button>
+              <Button variant="text" color="secondary">
+                Text Secondary
+              </Button>
+            </View>
+          </ExampleContainer>
+
+          <Codeblock
+            title="Variant + Color Combinations"
+            code={`// Soft variants with semantic colors
+<Button variant="soft" color="error">Soft Error</Button>
+<Button variant="soft" color="success">Soft Success</Button>
+<Button variant="soft" color="warning">Soft Warning</Button>
+<Button variant="soft" color="info">Soft Info</Button>
+
+// Outline variants with semantic colors
+<Button variant="outline" color="error">Outline Error</Button>
+<Button variant="outline" color="success">Outline Success</Button>
+<Button variant="outline" color="warning">Outline Warning</Button>
+<Button variant="outline" color="info">Outline Info</Button>
+
+// Ghost variants with different colors
+<Button variant="ghost" color="error">Ghost Error</Button>
+<Button variant="ghost" color="success">Ghost Success</Button>
+<Button variant="ghost" color="warning">Ghost Warning</Button>
+<Button variant="ghost" color="accent">Ghost Accent</Button>
+
+// Text variants with different colors
+<Button variant="text" color="error">Text Error</Button>
+<Button variant="text" color="success">Text Success</Button>
+<Button variant="text" color="warning">Text Warning</Button>
+<Button variant="text" color="secondary">Text Secondary</Button>`}
+          />
+        </Section>
+
         <Section title="Sizes">
           {renderSizeExamples()}
           <Codeblock
