@@ -10,8 +10,9 @@ import {
 } from "@joe111/neo-ui";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { Codeblock } from "../../../components";
 
-// Define examples for demonstration
+// Define examples for demonstration - Fixed to only include valid variants
 const VARIANTS: ButtonVariant[] = [
   "primary",
   "secondary",
@@ -19,10 +20,6 @@ const VARIANTS: ButtonVariant[] = [
   "ghost",
   "soft",
   "text",
-  "danger",
-  "success",
-  "warning",
-  "info",
 ];
 
 const SIZES: ButtonSize[] = ["xs", "sm", "md", "lg", "xl"];
@@ -211,9 +208,10 @@ export default function ButtonScreen() {
         icon: <Ionicons name="star" size={20} />,
       },
       {
-        label: "Icon Button - Danger",
+        label: "Icon Button - Error Color",
         props: {
-          variant: "danger" as ButtonVariant,
+          variant: "primary" as ButtonVariant,
+          color: "error" as ButtonColorKey,
           size: "sm" as ButtonSize,
           style: { aspectRatio: 1, minWidth: 34 },
         },
@@ -305,23 +303,148 @@ export default function ButtonScreen() {
         style={styles.container}
         contentContainerStyle={styles.content}
       >
-        <Section title="Variants">{renderVariantExamples()}</Section>
+        <Section title="Basic Usage">
+          <Codeblock
+            title="Import and Basic Button"
+            code={`import { Button } from '@joe111/neo-ui';
 
-        <Section title="Sizes">{renderSizeExamples()}</Section>
+<Button>Click me</Button>`}
+          />
+        </Section>
 
-        <Section title="Colors">{renderColorExamples()}</Section>
+        <Section title="Variants">
+          {renderVariantExamples()}
+          <Codeblock
+            title="Variant Examples"
+            code={`<Button variant="primary">Primary</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="outline">Outline</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="soft">Soft</Button>
+<Button variant="text">Text</Button>`}
+          />
+        </Section>
 
-        <Section title="States">{renderStateExamples()}</Section>
+        <Section title="Sizes">
+          {renderSizeExamples()}
+          <Codeblock
+            title="Size Examples"
+            code={`<Button size="xs">Extra Small</Button>
+<Button size="sm">Small</Button>
+<Button size="md">Medium</Button>
+<Button size="lg">Large</Button>
+<Button size="xl">Extra Large</Button>`}
+          />
+        </Section>
 
-        <Section title="With Icons">{renderIconExamples()}</Section>
+        <Section title="Colors">
+          {renderColorExamples()}
+          <Codeblock
+            title="Color Examples"
+            code={`<Button color="primary">Primary</Button>
+<Button color="secondary">Secondary</Button>
+<Button color="accent">Accent</Button>
+<Button color="error">Error</Button>
+<Button color="success">Success</Button>
+<Button color="warning">Warning</Button>
+<Button color="info">Info</Button>`}
+          />
+        </Section>
 
-        <Section title="Icon Buttons">{renderIconButtonExamples()}</Section>
+        <Section title="States">
+          {renderStateExamples()}
+          <Codeblock
+            title="State Examples"
+            code={`<Button disabled={true}>Disabled</Button>
+<Button loading={true}>Loading</Button>
+<Button fullWidth={true}>Full Width</Button>
+<Button hapticsDisabled={true}>No Haptics</Button>`}
+          />
+        </Section>
+
+        <Section title="With Icons">
+          {renderIconExamples()}
+          <Codeblock
+            title="Icon Examples"
+            code={`import { Ionicons } from '@expo/vector-icons';
+
+<Button startIcon={<Ionicons name="mail" size={16} />}>
+  Email
+</Button>
+
+<Button endIcon={<Ionicons name="arrow-forward" size={16} />}>
+  Next
+</Button>
+
+<Button 
+  startIcon={<Ionicons name="settings" size={16} />}
+  endIcon={<Ionicons name="flash" size={16} />}
+>
+  Settings
+</Button>`}
+          />
+        </Section>
+
+        <Section title="Icon Buttons">
+          {renderIconButtonExamples()}
+          <Codeblock
+            title="Icon Button Examples"
+            code={`// Icon buttons with square aspect ratio
+<Button 
+  variant="primary" 
+  size="md" 
+  style={{ aspectRatio: 1, minWidth: 42 }}
+>
+  <Ionicons name="person" size={20} />
+</Button>
+
+<Button 
+  variant="outline" 
+  size="sm" 
+  style={{ aspectRatio: 1, minWidth: 34 }}
+>
+  <Ionicons name="settings" size={16} />
+</Button>`}
+          />
+        </Section>
 
         <Section title="Icon Button Sizes">
           {renderIconButtonSizeExamples()}
+          <Codeblock
+            title="Icon Button Size Examples"
+            code={`// Different sizes with appropriate icon sizes
+<Button variant="primary" size="xs" style={{ aspectRatio: 1, minWidth: 26 }}>
+  <Ionicons name="add" size={12} />
+</Button>
+
+<Button variant="primary" size="sm" style={{ aspectRatio: 1, minWidth: 34 }}>
+  <Ionicons name="add" size={16} />
+</Button>
+
+<Button variant="primary" size="md" style={{ aspectRatio: 1, minWidth: 42 }}>
+  <Ionicons name="add" size={20} />
+</Button>`}
+          />
         </Section>
 
-        <Section title="Combined Examples">{renderCombinedExamples()}</Section>
+        <Section title="Combined Examples">
+          {renderCombinedExamples()}
+          <Codeblock
+            title="Combined Props Examples"
+            code={`// Combining variant, size, and color
+<Button variant="primary" size="lg" color="success">
+  Large Success Primary
+</Button>
+
+<Button variant="outline" size="sm" color="error">
+  Small Error Outline
+</Button>
+
+<Button variant="ghost" size="md" color="info">
+  Medium Info Ghost
+</Button>`}
+          />
+        </Section>
 
         <Section title="Interactive Examples">
           <ExampleContainer label="Interactive Loading Button">
@@ -339,9 +462,10 @@ export default function ButtonScreen() {
             </Button>
           </ExampleContainer>
 
-          <ExampleContainer label="Interactive Danger Button">
+          <ExampleContainer label="Interactive Error Button">
             <Button
-              variant="danger"
+              variant="primary"
+              color="error"
               loading={loadingStates.delete}
               onPress={() => toggleLoading("delete")}
               startIcon={
@@ -356,7 +480,8 @@ export default function ButtonScreen() {
 
           <ExampleContainer label="Full Width Submit Button">
             <Button
-              variant="success"
+              variant="primary"
+              color="success"
               size="lg"
               loading={loadingStates.submit}
               onPress={() => toggleLoading("submit")}
@@ -365,6 +490,26 @@ export default function ButtonScreen() {
               {loadingStates.submit ? "Submitting..." : "Submit Form"}
             </Button>
           </ExampleContainer>
+
+          <Codeblock
+            title="Interactive Button Examples"
+            code={`const [loading, setLoading] = useState(false);
+
+const handlePress = () => {
+  setLoading(true);
+  // Simulate async operation
+  setTimeout(() => setLoading(false), 2000);
+};
+
+<Button
+  variant="primary"
+  loading={loading}
+  onPress={handlePress}
+  startIcon={!loading ? <Ionicons name="save" size={16} /> : undefined}
+>
+  {loading ? "Saving..." : "Save Document"}
+</Button>`}
+          />
         </Section>
       </ScrollView>
     </Screen>
