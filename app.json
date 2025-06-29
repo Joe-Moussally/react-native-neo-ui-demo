@@ -9,7 +9,9 @@
       "backgroundColor": "#ffffff",
       "resizeMode": "contain"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.joe111.neo-ui-demo"
@@ -21,9 +23,24 @@
     "web": {
       "bundler": "metro"
     },
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "experiments": {
       "tsconfigPaths": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "62c87f56-3acc-4248-956a-b09c9c7f6382"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/62c87f56-3acc-4248-956a-b09c9c7f6382"
     }
   }
 }
