@@ -1,6 +1,24 @@
 import { useTheme } from "@joe111/neo-ui";
-import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import {
+  Dimensions,
+  Modal,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 interface CodeblockProps {
   code: string;
@@ -303,6 +321,12 @@ export const Codeblock: React.FC<CodeblockProps> = ({
   showLineNumbers = false,
 }) => {
   const { theme } = useTheme();
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Animation values
+  const scale = useSharedValue(1);
+  const opacity = useSharedValue(1);
+  const modalOpacity = useSharedValue(0);
 
   const lines = code.trim().split("\n");
 
@@ -370,6 +394,37 @@ export const Codeblock: React.FC<CodeblockProps> = ({
     text: theme.colors.text, // Default text color
   };
 
+  const openFullscreen = () => {
+    setIsFullscreen(true);
+    scale.value = withSpring(0.95, { damping: 15 });
+    opacity.value = withTiming(0.8, { duration: 200 });
+    modalOpacity.value = withTiming(1, { duration: 300 });
+  };
+
+  const closeFullscreen = () => {
+    modalOpacity.value = withTiming(0, { duration: 200 });
+    scale.value = withSpring(1, { damping: 15 });
+    opacity.value = withTiming(1, { duration: 200 });
+
+    // Close modal after animation
+    setTimeout(() => {
+      runOnJS(setIsFullscreen)(false);
+    }, 200);
+  };
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+      opacity: opacity.value,
+    };
+  });
+
+  const modalAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: modalOpacity.value,
+    };
+  });
+
   const styles = StyleSheet.create({
     container: {
       backgroundColor: theme.colors.surface,
@@ -389,10 +444,16 @@ export const Codeblock: React.FC<CodeblockProps> = ({
       justifyContent: "space-between",
       alignItems: "center",
     },
+    leftHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      flex: 1,
+    },
     title: {
       fontSize: 14,
       fontWeight: "600",
       color: theme.colors.text,
+      marginRight: 8,
     },
     language: {
       fontSize: 12,
@@ -402,6 +463,19 @@ export const Codeblock: React.FC<CodeblockProps> = ({
       paddingVertical: 2,
       borderRadius: 4,
       fontFamily: "monospace",
+    },
+    viewCodeButton: {
+      backgroundColor: theme.colors.primary,
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      borderRadius: 6,
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    viewCodeButtonText: {
+      fontSize: 12,
+      fontWeight: "600",
+      color: theme.colors.background,
     },
     scrollView: {
       maxHeight: 300,
@@ -438,13 +512,102 @@ export const Codeblock: React.FC<CodeblockProps> = ({
       fontSize: 12,
       fontFamily: "monospace",
     },
+    // Fullscreen styles
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: "rgba(0, 0, 0, 0.9)",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    fullscreenContainer: {
+      width: SCREEN_WIDTH,
+      height: SCREEN_HEIGHT,
+      backgroundColor: theme.colors.surface,
+      paddingTop: StatusBar.currentHeight || 44,
+    },
+    fullscreenHeader: {
+      backgroundColor: theme.colors.surfaceVariant,
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.border,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    fullscreenTitle: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: theme.colors.text,
+    },
+    closeButton: {
+      backgroundColor: theme.colors.error,
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      borderRadius: 8,
+    },
+    closeButtonText: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: theme.colors.background,
+    },
+    fullscreenScrollView: {
+      flex: 1,
+    },
+    fullscreenCodeContainer: {
+      flexDirection: "row",
+      padding: 16,
+      minHeight: "100%",
+    },
+    fullscreenLineNumbers: {
+      paddingRight: 16,
+      borderRightWidth: 1,
+      borderRightColor: theme.colors.border,
+      marginRight: 16,
+    },
+    fullscreenLineNumber: {
+      fontSize: 14,
+      color: theme.colors.textSecondary,
+      fontFamily: "monospace",
+      lineHeight: 22,
+      textAlign: "right",
+      minWidth: 30,
+    },
+    fullscreenCodeContent: {
+      flex: 1,
+    },
+    fullscreenCodeLine: {
+      fontSize: 14,
+      fontFamily: "monospace",
+      lineHeight: 22,
+      flexDirection: "row",
+      flexWrap: "wrap",
+    },
+    fullscreenToken: {
+      fontSize: 14,
+      fontFamily: "monospace",
+    },
   });
 
-  const renderHighlightedLine = (line: string, lineIndex: number) => {
+  const renderHighlightedLine = (
+    line: string,
+    lineIndex: number,
+    isFullscreenMode = false
+  ) => {
     if (!line.trim()) {
       return (
-        <View key={lineIndex} style={styles.codeLine}>
-          <Text style={[styles.token, { color: theme.colors.text }]}> </Text>
+        <View
+          key={lineIndex}
+          style={isFullscreenMode ? styles.fullscreenCodeLine : styles.codeLine}
+        >
+          <Text
+            style={[
+              isFullscreenMode ? styles.fullscreenToken : styles.token,
+              { color: theme.colors.text },
+            ]}
+          >
+            {" "}
+          </Text>
         </View>
       );
     }
@@ -452,12 +615,15 @@ export const Codeblock: React.FC<CodeblockProps> = ({
     const tokens = tokenize(line, language);
 
     return (
-      <View key={lineIndex} style={styles.codeLine}>
+      <View
+        key={lineIndex}
+        style={isFullscreenMode ? styles.fullscreenCodeLine : styles.codeLine}
+      >
         {tokens.map((token, tokenIndex) => (
           <Text
             key={`${lineIndex}-${tokenIndex}`}
             style={[
-              styles.token,
+              isFullscreenMode ? styles.fullscreenToken : styles.token,
               { color: syntaxColors[token.type] || theme.colors.text },
             ]}
           >
@@ -468,43 +634,108 @@ export const Codeblock: React.FC<CodeblockProps> = ({
     );
   };
 
-  return (
-    <View style={styles.container}>
-      {(title || language) && (
-        <View style={styles.header}>
-          {title && <Text style={styles.title}>{title}</Text>}
-          <Text style={styles.language}>{language}</Text>
-        </View>
-      )}
+  const renderCodeContent = (isFullscreenMode = false) => (
+    <ScrollView
+      style={isFullscreenMode ? styles.fullscreenScrollView : styles.scrollView}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={true}
+      nestedScrollEnabled={true}
+    >
       <ScrollView
-        style={styles.scrollView}
-        horizontal
-        showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={true}
+        showsHorizontalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        <ScrollView
-          showsVerticalScrollIndicator={true}
-          showsHorizontalScrollIndicator={false}
-          nestedScrollEnabled={true}
+        <View
+          style={
+            isFullscreenMode
+              ? styles.fullscreenCodeContainer
+              : styles.codeContainer
+          }
         >
-          <View style={styles.codeContainer}>
-            {showLineNumbers && (
-              <View style={styles.lineNumbers}>
-                {lines.map((_, index) => (
-                  <Text key={index} style={styles.lineNumber}>
-                    {index + 1}
-                  </Text>
-                ))}
-              </View>
-            )}
-            <View style={styles.codeContent}>
-              {lines.map((line, index) => renderHighlightedLine(line, index))}
+          {showLineNumbers && (
+            <View
+              style={
+                isFullscreenMode
+                  ? styles.fullscreenLineNumbers
+                  : styles.lineNumbers
+              }
+            >
+              {lines.map((_, index) => (
+                <Text
+                  key={index}
+                  style={
+                    isFullscreenMode
+                      ? styles.fullscreenLineNumber
+                      : styles.lineNumber
+                  }
+                >
+                  {index + 1}
+                </Text>
+              ))}
             </View>
+          )}
+          <View
+            style={
+              isFullscreenMode
+                ? styles.fullscreenCodeContent
+                : styles.codeContent
+            }
+          >
+            {lines.map((line, index) =>
+              renderHighlightedLine(line, index, isFullscreenMode)
+            )}
           </View>
-        </ScrollView>
+        </View>
       </ScrollView>
-    </View>
+    </ScrollView>
+  );
+
+  return (
+    <>
+      <Animated.View style={[styles.container, animatedStyle]}>
+        <View style={styles.header}>
+          <View style={styles.leftHeader}>
+            {title && <Text style={styles.title}>{title}</Text>}
+            <Text style={styles.language}>{language.toUpperCase()}</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.viewCodeButton}
+            onPress={openFullscreen}
+          >
+            <Text style={styles.viewCodeButtonText}>View Code</Text>
+          </TouchableOpacity>
+        </View>
+        {renderCodeContent(false)}
+      </Animated.View>
+
+      <Modal
+        visible={isFullscreen}
+        animationType="none"
+        statusBarTranslucent
+        onRequestClose={closeFullscreen}
+      >
+        <Animated.View style={[styles.modalOverlay, modalAnimatedStyle]}>
+          <View style={styles.fullscreenContainer}>
+            <View style={styles.fullscreenHeader}>
+              <View style={styles.leftHeader}>
+                <Text style={styles.fullscreenTitle}>
+                  {title || "Code Preview"} • {language.toUpperCase()}
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={closeFullscreen}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+            {renderCodeContent(true)}
+          </View>
+        </Animated.View>
+      </Modal>
+    </>
   );
 };
 
